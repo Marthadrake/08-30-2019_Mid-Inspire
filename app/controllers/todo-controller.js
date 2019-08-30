@@ -4,6 +4,13 @@ const _todoService = new TodoService()
 
 //TODO Create the render function
 function _drawTodos() {
+	let template = ""
+	let todo = todoService.list
+	TodoService.forEach((list, index) => {
+		template += Todo.getTemplate(index)
+	})
+
+	document.querySelector('#todos').innerHTML = template
 
 }
 
