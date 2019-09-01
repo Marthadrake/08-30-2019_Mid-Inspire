@@ -1,43 +1,48 @@
 
+
+
+
+
+
+
+
 export default class Todo {
   constructor(data) {
     console.log("list from models list")
     this.name = data.name
-    this.chores = data.chores || []
+    this.completed = data.completed
+    this.user = data.user
+    this.description = data.description
+    this.todoId = data.todoId || []
 
   }
 
   getTemplate(index) {
-    let template =
-      `            
-        <div class="row justify-content border border-info p-3">
-        <div class="offset-3 col-6 mt-3 border border-danger">
+    let template = `
+      <div class="row mt-4">
+        <div class="offset-2 col-5">
+        A Todo List
+        </div>
+        <h6>${this.name}</h6>
+        <ul>`
+
+    template += this.drawTodos(index)
+    template += `</ul>
+        <form class="form-group" onsubmit="categoryList(event, ${index})">
+          <div class="form-group>
+          	<button class="btn btn-sucess form-control" type="submit"><input type="text" name="newTodo">Add Todo</button>
             <div>
-                <h1>${this.name}></h1>
-                <ul>`
-    template += this.drawTodo(index)
-    template += ` </ul>
-            <form onsubmit="app.controllers.listController.addTodos(event, ${index}">
-                <div class="form-group">
-                    <label font-weight-bold mt-3" for="todos">chores</label>
-                    <input type="text" class="form-control font-italic font-weight-bold name="chores" placeholder="list chores" required>
-                    </div>
-                    </form>
-                    <button class="btn btn-outline-success btn-sm" type="submit" onclick="app.controllers.listContoller.addListTodos(event)">+++</button>
-                <button class="btn btn-outline-danger btn-sm" type="submit" onclick="app.controllers.listController.deleteList(${index})">Delete Chores</button>
-            </div>
-            </div>
-            </div>
-            `
+            </form>
+            <button class="btn btn-danger" type="submit" onclick="app.controllers.todoController.removeTodo()">Delete Todo</button>
+        </div>    
+    `
     return template
   }
-  drawTodo(ListTodoIndex) {
-    let todoTemplate = ""
-    this.todos.forEach((c, todoIndex) => {
-      todoTemplate += `<li>${c}<span
-                onclick="app.controllers.listController.addTodos(${todoIndex}, ${todosIndex})">Add Todo</span></li>`
+  drawTodos(listIndex) {
+    let todoTemplate = ``
+    this.todoId.forEach((t, todosIndex) => {
+      todoTemplate += `<li>${t}<span onclick="app.controller.todoController.addTodos((${listIndex}, ${todosIndex})">New List</span</li>`
     });
     return todoTemplate
   }
-
 }

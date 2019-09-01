@@ -2,9 +2,13 @@
 
 export default class Image {
   constructor(data) {
-    this.id = data.id
-    this.imgUrl = data.large_Url || data.Url
+    this.url = data.Url
 
+  }
+  get Template() {
+    return `
+    <img src="${this.url}"/>
+    `
   }
 
 }
