@@ -1,48 +1,36 @@
 
-
-
-
-
-
-
-
 export default class Todo {
   constructor(data) {
     console.log("list from models list")
     this.name = data.name
-    this.completed = data.completed
-    this.user = data.user
-    this.description = data.description
-    this.todoId = data.todoId || []
+    this.todoId = data.todoId || [];
+    this.listTodo = this.listTodo || []
 
   }
 
   getTemplate(index) {
-    let template = `
-      <div class="row mt-4">
-        <div class="offset-2 col-5">
-        A Todo List
-        </div>
-        <h6>${this.name}</h6>
-        <ul>`
-
-    template += this.drawTodos(index)
-    template += `</ul>
-        <form class="form-group" onsubmit="categoryList(event, ${index})">
-          <div class="form-group>
-          	<button class="btn btn-sucess form-control" type="submit"><input type="text" name="newTodo">Add Todo</button>
-            <div>
-            </form>
-            <button class="btn btn-danger" type="submit" onclick="app.controllers.todoController.removeTodo()">Delete Todo</button>
-        </div>    
+    let template =
+      `
+       <div class="col-4">
+            <h1>${this.name}</h1>
+            <ul>`
+    template += this.drawListTodo(index)
+    template += `    </ul>
+      <form >
+				<input type="text"  class="form-control" name="newTodo">
+				<button type="submit" onsubmit="app.controllers.todocontroller.drawTodos">Add todo</button>
+      </form>
+				<button type="submit" onsubmit="app.controllers.todocontroller.removeTodo">Add todo</button>
+		</div>
     `
     return template
+
   }
-  drawTodos(listIndex) {
-    let todoTemplate = ``
-    this.todoId.forEach((t, todosIndex) => {
-      todoTemplate += `<li>${t}<span onclick="app.controller.todoController.addTodos((${listIndex}, ${todosIndex})">New List</span</li>`
+  drawListTodo(todoIndex) {
+    let listTodoTemplate = ""
+    this.listTodo.forEach((t, listTodo) => {
+      listTodoTemplate += `<li>${t}<span onclick="app.controllers.todoController.removeTodo(${todoIndex}, ${listTodo})">X</span></li>`
     });
-    return todoTemplate
+    return listTodoTemplate
   }
 }

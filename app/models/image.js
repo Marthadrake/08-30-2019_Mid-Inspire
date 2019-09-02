@@ -7,7 +7,7 @@ export default class Image {
   }
   get Template() {
     return `
-    <img src="${this.url}"/>
+    <img src="${this.url}" height="100">
     `
   }
 

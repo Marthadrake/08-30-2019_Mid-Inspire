@@ -30,12 +30,14 @@ export default class TodoService {
 	get TodoError() {
 		return _state.error
 	}
-	addSubscriber(prop, fn) {
-		_subscribers[prop].push(fn)
-	}
+
 
 	get Todos() {
 		return _state.todos.map(t => todoApi(t))
+	}
+
+	addSubscriber(prop, fn) {
+		_subscribers[prop].push(fn)
 	}
 
 	getTodos() {
@@ -45,20 +47,27 @@ export default class TodoService {
 				console.log(res.data.data);
 
 				//TODO Handle this response from the server
-				_setState('apiTodos', res.data.data)
+				_setState('todos', res.data.data)
 			})
 			.catch(err => _setState('error', err))
 	}
 
 
-
-	addTodo(todo) {
-		todoApi.post('', todo)
+	addTodo(newTodo) {
+		todoApi.post('', newTodo)
 			.then(res => {
 				//TODO Handle this response from the server (hint: what data comes back, do you want this?)
-				_state.todos.push(res.data.data)
+				console.log("todo", res.data.data)
+
 			})
+
 			.catch(err => _setState('error', err))
+	}
+
+
+	addListTodo(newListTodo, todoIndex) {
+		_state.todos[todoIndex].listTodo.push(newListTodo)
+
 	}
 
 	toggleTodoStatus(todoId) {
@@ -86,9 +95,12 @@ export default class TodoService {
 	removeTodo(todoId) {
 		todoApi.delete(todoId)
 			.then(res => {
+				let index = _state.todos.findIndex(t => todoApi._id == todoId)
+				_state.todos.splice(index, 1)
 				console.log(res.data.data)
 				this.getTodos()
 			})
+
 			.catch(err => _setState('error', err))
 	}
 }

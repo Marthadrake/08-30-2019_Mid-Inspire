@@ -8,9 +8,9 @@ function _drawTodos() {
 	let todos = _todoService.Todos
 	todos.forEach((todo, index) => {
 		template += todo.getTemplate(index)
-	})
 
-	document.querySelector('#sp-todos').innerHTML = template
+	});
+	document.getElementById('#sp-todos').innerHTML = template
 
 }
 
@@ -21,22 +21,30 @@ function _drawTodos() {
 export default class TodoController {
 	constructor() {
 		//TODO Remember to register your subscribers
-		_todoService.addSubscriber('todos', _drawTodos),
-			_todoService.getTodos()
+		_todoService.addSubscriber('todos', _drawTodos)
+
+		_todoService.getTodos()
+
 	}
 
 	addTodo(e) {
 		e.preventDefault()
 		let form = e.target
-		let todo = {
+		let newTodo = {
 			name: form.name.value,
-			completed: form.completed.value,
-			user: form.user.value,
-			description: form.description.value
+
 			//TODO build the todo object from the data that comes into this method
 		}
-		_todoService.addTodo(todo)
+		_todoService.addTodo(newTodo)
 		form.reset()
+	}
+
+	addListTodo(e, todoIndex) {
+		e.preventDefault()
+		let form = event.target
+		let newListTodo = form.listTodo.value
+		_todoService.addListTodo(newListTodo, todoIndex)
+
 	}
 
 	//NOTE This method will pass an Id to your service for the TODO that will need to be toggled
