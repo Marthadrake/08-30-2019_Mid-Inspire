@@ -17,17 +17,17 @@ let _subscribers = {
 }
 
 
-function _setState(propName, data) {
-	_state[propName] = data
-	_subscribers[propName].forEach(fn => fn())
+function _setState(prop, value) {
+	_state[prop] = value
+	_subscribers[prop].forEach(fn => fn())
 }
 
 
 
 //TODO create methods to retrieve data trigger the update window when it is complete
 export default class ImageService {
-	addSubscriber(propName, fn) {
-		_subscribers[propName].push(fn)
+	addSubscriber(prop, fn) {
+		_subscribers[prop].push(fn)
 	}
 
 	get Images() {

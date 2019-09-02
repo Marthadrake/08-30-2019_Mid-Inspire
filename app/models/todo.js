@@ -3,8 +3,8 @@ export default class Todo {
   constructor(data) {
     console.log("list from models list")
     this.name = data.name
-    this.todoId = data.todoId || [];
-    this.listTodo = this.listTodo || []
+    this.todoId = data.todoId || []
+    this.toggleTodo = this.toggleTodo || []
 
   }
 
@@ -14,7 +14,7 @@ export default class Todo {
        <div class="col-4">
             <h1>${this.name}</h1>
             <ul>`
-    template += this.drawListTodo(index)
+    template += this.drawToggleTodo(index)
     template += `    </ul>
       <form >
 				<input type="text"  class="form-control" name="newTodo">
@@ -26,11 +26,11 @@ export default class Todo {
     return template
 
   }
-  drawListTodo(todoIndex) {
-    let listTodoTemplate = ""
-    this.listTodo.forEach((t, listTodo) => {
-      listTodoTemplate += `<li>${t}<span onclick="app.controllers.todoController.removeTodo(${todoIndex}, ${listTodo})">X</span></li>`
+  drawToggleTodo(todoId) {
+    let toggleTodoTemplate = ""
+    this.toggleTodo.forEach((t, toggleTodo) => {
+      toggleTodoTemplate += `<li>${t}<span onclick="app.controllers.todoController.removeTodo(${this.todoId}, ${this.toggleTodo})">X</span></li>`
     });
-    return listTodoTemplate
+    return toggleTodoTemplate
   }
 }

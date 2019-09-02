@@ -9,7 +9,7 @@ let _imageService = new ImageService()
 
 function _draw() {
   let img = _imageService.Images
-  document.getElementById("bg-image").innerHTML = img.Template
+  document.getElementById("#bg-image").innerHTML = img.Template
 
 }
 

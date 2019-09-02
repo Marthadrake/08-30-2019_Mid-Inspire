@@ -1,28 +1,23 @@
 import Todo from "../models/todo.js";
-//NOTE your service is all set up for the observer pattern but there is still work to be done
-
 
 // @ts-ignore
-let todoApi = axios.create({
+const todoApi = axios.create({
 	baseURL: 'https://bcw-sandbox.herokuapp.com/api/jake/todos/',
 	timeout: 3000
 });
 
 let _state = {
 	todos: [],
-	error: {}
-
+	error: {},
 }
 let _subscribers = {
 	todos: [],
 	error: []
-
 }
 
-function _setState(prop, data) {
-	_state[prop] = data
-	_subscribers[prop].forEach(fn => fn())
-
+function _setState(propName, data) {
+	_state[propName] = data
+	_subscribers[propName].forEach(fn => fn())
 }
 
 export default class TodoService {
@@ -31,76 +26,70 @@ export default class TodoService {
 		return _state.error
 	}
 
-
-	get Todos() {
-		return _state.todo
+	get TodoApi() {
+		return _state.todoApi
 	}
 
-	addSubscriber(prop, fn) {
-		_subscribers[prop].push(fn)
+	addSubscriber(propName, fn) {
+		_subscribers[propName].push(fn)
 	}
 
-	getTodos() {
+	getTodoApi() {
 		console.log("Getting the Todo List")
 		todoApi.get()
 			.then(res => {
-				console.log(res.data.data);
-
 				//TODO Handle this response from the server
-				_setState('todos', res.data.data)
+				let todosData = res.data.data.map(t => new Todo(t))
+				_setState('todos', todosData)
 			})
-			.catch(err => _setState('error', err))
+
+			.catch(err => _setState('error', err.response.data))
 	}
 
-
-	addTodo(newTodo) {
-		todoApi.post('', newTodo)
+	addTodo(todo) {
+		todoApi.post('', todo)
 			.then(res => {
+				_state.todos.push(res.data.data)
+				_setState('todo', _state.todos)
 				//TODO Handle this response from the server (hint: what data comes back, do you want this?)
-				console.log("todo", res.data.data)
-
 			})
-
-			.catch(err => _setState('error', err))
+			.catch(err => _setState('error', err.response.data))
 	}
 
-
-	addListTodo(newListTodo, todoIndex) {
-		_state.todos[todoIndex].listTodo.push(newListTodo)
-
-	}
-
-	toggleTodoStatus(todoId) {
+	toggleTodoStatus(newToggleTodo, todoId) {
 		let todo = _state.todos.find(todo => todo._id == todoId)
-		todo.completed = !todo.completed
+		if (todo) {
+			alert('todo already listed')
+			return
+		}
 		//TODO Make sure that you found a todo, 
 		//		and if you did find one
 		//		change its completed status to whatever it is not (ex: false => true or true => false)
-		if (todo) {
-			alert('Todo already listed')
-			return
-		}
 
 		todoApi.put(todoId, todo)
 			.then(res => {
+				_state.todos[todoId].toggleTodos.push(newToggleTodo)
+				_setState('todoId', res.data.data)
 				//TODO do you care about this data? or should you go get something else?
-				console.log("todo", res.data.data)
 			})
-			.catch(err => _setState('error', err))
+			.catch(err => _setState('error', err.response.data))
+
+
 	}
-
-	//TODO Work through this one on your own
-	//		what is the request type
-	//		once the response comes back, what do you need to insure happens?
 	removeTodo(todoId) {
-		todoApi.delete(todoId)
+		todoApi.remove(_state.todoId._id)
 			.then(res => {
-				console.log(res.data.data)
-				this.getTodos()
+				let index = _state.todos.findIndex(todo => todo._id == todoId)
+				_state.todos.splice(index, 1)
+				_setState('todoId', res.data.data)
 			})
+			.catch(err => _setState('error', err.response.data))
 
-			.catch(err => _setState('error', err))
+		//TODO Work through this one on your own
+		//		what is the request type
+		//		once the response comes back, what do you need to insure happens?
 	}
 }
+
 
 

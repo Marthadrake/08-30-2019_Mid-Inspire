@@ -1,65 +1,60 @@
+
 import TodoService from "../services/todo-service.js";
 
-let _todoService = new TodoService()
+const _todoService = new TodoService()
 
 //TODO Create the render function
 function _drawTodos() {
-	let template = ``
-	let todos = _todoService.Todos
+	let template = ''
+	let todos = _todoService.TodoApi
 	todos.forEach((todo, index) => {
 		template += todo.getTemplate(index)
-
 	});
-	document.getElementById('#sp-todos').innerHTML = template
+
+	document.getElementById('#todos').innerHTML = template
 
 }
 
 //NOTE Keep an eye on your console for any of these errors
-
+function _drawError() {
+	console.error('[TODO ERROR]', _todoService.TodoError)
+}
 
 
 export default class TodoController {
 	constructor() {
 		//TODO Remember to register your subscribers
-		_todoService.addSubscriber('todos', _drawTodos)
-
-		_todoService.getTodos()
-
+		_todoService.addSubscriber('error', _drawError)
+		_todoService.getTodoApi()
 	}
 
 	addTodo(e) {
 		e.preventDefault()
-		let form = e.target
-		let newTodo = {
-			name: form.name.value,
-
+		var form = e.target
+		var todo = {
+			name: form.name.value
 			//TODO build the todo object from the data that comes into this method
 		}
-		_todoService.addTodo(newTodo)
-		form.reset()
-	}
-
-	addListTodo(e, todoIndex) {
-		e.preventDefault()
-		let form = event.target
-		let newListTodo = form.listTodo.value
-		_todoService.addListTodo(newListTodo, todoIndex)
-
+		_todoService.addTodo(todo)
+		_drawTodos()
 	}
 
 	//NOTE This method will pass an Id to your service for the TODO that will need to be toggled
-	toggleTodoStatus(todoId) {
-		todoId.preventDefault();
-		let form = todoId.target
-		let update = {
-			todoId: form.todoId.value
-		}
-		_todoService.toggleTodoStatus(update)
+	toggleTodoStatus(event, todoId) {
+		event.preventDefault()
+		let form = event.target
+		let newToggleTodo = form.toggleTodo.value
+		_todoService.toggleTodoStatus(newToggleTodo, todoId)
+
+		_todoService.toggleTodoStatus(todoId)
 	}
 
 	//NOTE This method will pass an Id to your service for the TODO that will need to be deleted
 	removeTodo(todoId) {
 		_todoService.removeTodo(todoId)
-		document.getElementById('sp-todo').innerHTML = ''
+		_drawTodos
 	}
+
+
+
 }
