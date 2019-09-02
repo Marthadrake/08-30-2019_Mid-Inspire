@@ -33,7 +33,7 @@ export default class TodoService {
 
 
 	get Todos() {
-		return _state.todos.map(t => todoApi(t))
+		return _state.todo
 	}
 
 	addSubscriber(prop, fn) {
@@ -95,8 +95,6 @@ export default class TodoService {
 	removeTodo(todoId) {
 		todoApi.delete(todoId)
 			.then(res => {
-				let index = _state.todos.findIndex(t => todoApi._id == todoId)
-				_state.todos.splice(index, 1)
 				console.log(res.data.data)
 				this.getTodos()
 			})
